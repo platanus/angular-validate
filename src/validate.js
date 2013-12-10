@@ -34,7 +34,36 @@ function jsSplit(_string, _by) {
 }
 
 angular.module('platanus.validate', ['platanus.inflector'])
-  // Various string manipulation functions
+  /**
+   * validate directive.
+   *
+   * Adds validation to a given input, input must register a ng model.
+   *
+   * Usage:
+   *
+   * Suposing both RequiredValidator and NumberValidator are provided,
+   * the following will trigger `required` and `number` errors if value does
+   * not meet the requirements.
+   *
+   * ```javascript
+   * <input type="text" validate="required, number"></input>
+   * ```
+   *
+   * The directive also support inline conditional expressions
+   *
+   * ```javascript
+   * <input type="text" validate="is $value == 0"></input>
+   * ```
+   *
+   * Its also posible to register errors using custom names. In the following case,
+   * the ngModel's $error property will have a number and a titleRequired property, this
+   * is usefull for custom error messages.
+   *
+   * ```javascript
+   * <input type="text" name="title" validate="required as title-required, number"></input>
+   * ```
+   *
+   */
   .directive('validate', ['$parse', '$injector', '$inflector', function($parse, $injector, $inflector) {
 
     return {
@@ -79,7 +108,12 @@ angular.module('platanus.validate', ['platanus.inflector'])
       }
     };
   }])
-  // Allows various
+  /**
+   * The validation group directive allows two or more inputs to trigger validations on each other
+   * whenever one of the group's input changes.
+   *
+   * The revalidation process happens only on invalid inputs, this is to provide proper feedback to user.
+   */
   .directive('validationGroup', ['$timeout', function($timeout) {
 
     return {
@@ -117,5 +151,26 @@ angular.module('platanus.validate', ['platanus.inflector'])
         });
       }
     };
-  }]);
+  }])
+  /**
+   * Required validator, only allows non blank values
+   */
+  .constant('RequiredValidator', function(_value) {
+    return !!_value;
+  })
+  /**
+   * Match validator, only allows values that match a given regexp.
+   *
+   * Usage:
+   *
+   * ```html
+   * <input type="text" validate="match: '^\d{3}-\d{3}-\d{8}$' as phone"></input>
+   * ```
+   */
+  .constant('MatchValidator', function(_value, _regex) {
+    if(!_value) {
+      return true;
+    }
+    return (new RegExp(_regex)).test(_value);
+  });
 

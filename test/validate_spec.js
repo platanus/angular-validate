@@ -71,6 +71,39 @@ describe('', function() {
     });
   });
 
+
+  describe('validators', function() {
+
+    var scope;
+
+    beforeEach(inject(function($rootScope, $compile) {
+      var element = angular.element(
+        '<form name="form">\
+          <input name="test1" ng-model="inputs.test1" validate="required" type="text"/>\
+          <input name="test2" ng-model="inputs.test2" validate="match: \'^\\d+\'" type="text"/>\
+        </form>'
+      );
+
+      scope = $rootScope;
+      scope.inputs = { test1: '', test2: '' };
+      $compile(element)(scope);
+      scope.$digest();
+    }));
+
+    it('should allow values that arent blank when using required', function() {
+      scope.form.test1.$setViewValue('');
+      expect(scope.form.test1.$valid).toEqual(false);
+      scope.form.test1.$setViewValue('2');
+      expect(scope.form.test1.$valid).toEqual(true);
+    });
+
+    it('should allow values that matches expression when using match', function() {
+      scope.form.test2.$setViewValue('2');
+      expect(scope.form.test2.$valid).toEqual(false);
+    });
+
+  });
+
   describe('validateGroup directive', function() {
 
     var scope;

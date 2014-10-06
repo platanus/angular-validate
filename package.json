@@ -13,6 +13,7 @@
     "grunt-karma": "~0.8",
     "karma-jasmine": "~0.2",
     "karma-osx-reporter": "*",
+    "karma-cli": "*",
     "karma-chrome-launcher": "*"
   },
   "scripts": {

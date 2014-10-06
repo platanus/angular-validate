@@ -1,6 +1,6 @@
 /**
  * Angular Validation Framework
- * @version v0.1.0 - 2013-12-09
+ * @version v0.1.0 - 2014-10-06
  * @link https://github.com/platanus/angular-validate
  * @author Ignacio Baixas <ignacio@platan.us>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -131,9 +131,15 @@ angular.module('platanus.validate', ['platanus.inflector'])
       require: 'ngModel',
       link: function(_scope, _element, _attrs, _ctrl) {
 
-        var group = groups[_attrs.validationGroup];
+        var name = _attrs.validationGroup, always = false;
+        if(name[0] === '!') {
+          name = name.substr(1);
+          always = true;
+        }
+
+        var group = groups[name];
         if(group === undefined) group = groups[_attrs.validationGroup] = [];
-        group.push(_ctrl);
+        group.push({ model: _ctrl, always: always });
 
         // create a watch that revalidates all other group controls that are invalid
         // whenever this control value changes and is valid.
@@ -141,11 +147,12 @@ angular.module('platanus.validate', ['platanus.inflector'])
           return _ctrl.$viewValue;
         }, function() {
           if(_ctrl.$invalid) return;
+
           // revalidate all other group models if valid
           angular.forEach(group, function(_other) {
-            if(_ctrl != _other && _other.$invalid) {
+            if(_ctrl !== _other.model && (_other.always || _other.model.$invalid)) {
               $timeout(function() {
-                _other.$setViewValue(_other.$viewValue);
+                _other.model.$setViewValue(_other.model.$viewValue);
               }, 0);
             }
           });

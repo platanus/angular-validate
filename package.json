@@ -14,9 +14,10 @@
     "karma-jasmine": "~0.2",
     "karma-osx-reporter": "*",
     "karma-cli": "*",
+    "karma-firefox-launcher": "*",
     "karma-chrome-launcher": "*"
   },
   "scripts": {
-    "test": "./node_modules/.bin/karma start karma.conf.js --single-run"
+    "test": "./node_modules/.bin/karma start karma.conf.js --single-run --reporters dots --browsers Firefox"
   }
 }

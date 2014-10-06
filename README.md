@@ -62,4 +62,12 @@ Use aliases to customize `model.$error` flags:
 
 Use group validations to keep dependant input validations in sync:
 
-*TODO*
+```html
+<input ng-model="bar" validate-group="foobar" validate="is-greater-than: 4" type="text"/>
+<input ng-model="foo" validate-group="foobar" validate="is $value != bar as equals-bar" type="text"/>
+```
+
+Members of a group will be revalidates if **invalid** and any other member of the group **changes** and is **valid**.
+
+It is also posible to force revalidation of a valid group member, to do so use the **!** modifier: `validate-group="!foobar"`
+

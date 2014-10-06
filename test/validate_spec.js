@@ -20,6 +20,16 @@ describe('', function() {
     $provide.factory('IsEqualToValidator', function() {
       return function(_v1, _v2) { return _v1 == _v2; };
     });
+
+    $provide.factory('AsyncValidator', function($q, $timeout) {
+      return function() {
+        var defer = $q.defer();
+        $timeout(function() {
+          defer.resolve(true);
+        });
+        return defer.promise;
+      };
+    });
   }));
 
   describe('validate directive', function() {
@@ -71,7 +81,6 @@ describe('', function() {
     });
   });
 
-
   describe('validators', function() {
 
     var scope;
@@ -113,12 +122,13 @@ describe('', function() {
         '<form name="form">\
           <input name="test1" ng-model="inputs.test1" validation-group="teapot" type="text"/>\
           <input name="test2" ng-model="inputs.test2" validation-group="teapot" validate="is-equal-to: form.test1.$viewValue" type="text"/>\
+          <input name="test3" ng-model="inputs.test3" validation-group="!teapot" validate="is-equal-to: form.test1.$viewValue" type="text"/>\
         </form>'
       );
 
       scope = $rootScope;
       scope.self = scope;
-      scope.inputs = { test1: '2', test2: '6' };
+      scope.inputs = { test1: '2', test2: '6', test3: '2' };
       $compile(element)(scope);
       scope.$digest();
     }));
@@ -134,6 +144,19 @@ describe('', function() {
       scope.$digest();
       $timeout.flush();
       expect(scope.form.test2.$valid).toEqual(true);
+    }));
+
+    it('should revalidate valid if explicitly required (! is prefixed to group name)', inject(function($timeout) {
+      // make sure test3 is valid
+      scope.form.test3.$setViewValue('2');
+      scope.$digest();
+      expect(scope.form.test2.$valid).toEqual(true);
+
+      // change test1 value so test3 is revalidated
+      scope.form.test1.$setViewValue('3');
+      scope.$digest();
+      $timeout.flush();
+      expect(scope.form.test3.$valid).toEqual(false);
     }));
   });
 });

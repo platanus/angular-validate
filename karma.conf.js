@@ -7,36 +7,32 @@ module.exports = function(config) {
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
-    frameworks: ["jasmine"],
+    frameworks: ['jasmine'],
 
     // list of files / patterns to load in the browser
     files: [
-  		// libraries
-  		'bower_components/angular/angular.js',
-  		'bower_components/angular-mocks/angular-mocks.js',
+      // libraries
+      'bower_components/angular/angular.js',
+      'bower_components/angular-mocks/angular-mocks.js',
       'bower_components/angular-inflector/dist/angular-inflector.js',
 
-  		// our app
+      // our app
       'src/*.js',
 
-  		// tests
-  		'test/**/*.js'
+      // tests
+      'test/**/*.js'
     ],
 
     // Karma plugins
     plugins: [
       'karma-jasmine',
-      'karma-requirejs',
       'karma-chrome-launcher',
-      'karma-firefox-launcher',
       'karma-osx-reporter'
     ],
 
     // list of files to exclude
     exclude: [
-
     ],
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit'

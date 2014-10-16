@@ -22,7 +22,7 @@
     ".travis.yml"
   ],
   "dependencies": {
-    "angular-inflector": "*"
+    "angular-inflector": "~0.2"
   },
   "devDependencies": {
     "angular": "*",

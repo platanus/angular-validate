@@ -1,6 +1,6 @@
 /**
  * Angular Validation Framework
- * @version v0.1.1 - 2014-10-06
+ * @version v0.1.2 - 2014-10-16
  * @link https://github.com/platanus/angular-validate
  * @author Ignacio Baixas <ignacio@platan.us>
  * @license MIT License, http://www.opensource.org/licenses/MIT
@@ -74,7 +74,7 @@ angular.module('platanus.validate', ['platanus.inflector'])
    * ```
    *
    */
-  .directive('validate', ['$parse', '$injector', '$inflector', function($parse, $injector, $inflector) {
+  .directive('validate', ['$parse', '$injector', 'inflector', function($parse, $injector, inflector) {
 
     return {
       restrict: 'AC',
@@ -87,12 +87,12 @@ angular.module('platanus.validate', ['platanus.inflector'])
         angular.forEach(jsSplit(_attrs.validate, ','), function(_val) {
           var m = _val.match(/^\s*(is\s+)?(.*?)(\s+as\s+([^\s]+))?\s*$/i), dsc = {}, name;
           if(!m) return; // TODO: throw.
-          if(m[3]) dsc.as = $inflector.camelize(m[4]);
+          if(m[3]) dsc.as = inflector.camelize(m[4]);
           if(!m[1]) {
             m = m[2].match(/^(\w[\w\d-]+)(?::(.*?))?$/);
             if(!m) return; // TODO: throw.
-            if(!dsc.as) dsc.as = $inflector.camelize(m[1]);
-            dsc.fun = $injector.get($inflector.camelize(m[1], true) + 'Validator');
+            if(!dsc.as) dsc.as = inflector.camelize(m[1]);
+            dsc.fun = $injector.get(inflector.camelize(m[1], true) + 'Validator');
             if(m[2]) dsc.dyn = $parse(m[2]);
           } else dsc.dyn = $parse(m[2]);
 

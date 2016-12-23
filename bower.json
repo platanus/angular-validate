@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git://github.com/platanus/angular-validate.git"
   },
-  "main": "./dist/angular-validate.min.js",
+  "main": "./dist/angular-validate.js",
   "ignore": [
     "**/.*",
     "Gruntfile.js",
@@ -22,10 +22,10 @@
     ".travis.yml"
   ],
   "dependencies": {
-    "angular-inflector": "~0.2"
+    "angular-inflector": "~0.2",
+    "angular": "~1.3"
   },
   "devDependencies": {
-    "angular": "*",
-    "angular-mocks": "*"
+    "angular-mocks": "~1.3"
   }
 }

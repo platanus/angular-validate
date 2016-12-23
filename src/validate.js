@@ -69,12 +69,10 @@ angular.module('platanus.validate', ['platanus.inflector'])
     return {
       restrict: 'AC',
       require: 'ngModel',
+      scope: false,
       link: function(_scope, _element, _attrs, _ctrl) {
-
-        // parse validation expression
-        // IDEA: find a way of storing error metadata, not just the message
-        var validations = [];
         angular.forEach(jsSplit(_attrs.validate, ','), function(_val) {
+          // parse validation expression
           var m = _val.match(/^\s*(is\s+)?(.*?)(\s+as\s+([^\s]+))?\s*$/i), dsc = {}, name;
           if(!m) return; // TODO: throw.
           if(m[3]) dsc.as = inflector.camelize(m[4]);
@@ -86,24 +84,18 @@ angular.module('platanus.validate', ['platanus.inflector'])
             if(m[2]) dsc.dyn = $parse(m[2]);
           } else dsc.dyn = $parse(m[2]);
 
-          validations.push(dsc);
-        });
+          // setup validator
+          _ctrl.$validators[dsc.as || 'validate'] = function(_value) {
+            var isValid = dsc.dyn ? dsc.dyn(_scope, { $value: _value }) : [];
 
-        // apply each validation on value change
-        _ctrl.$parsers.push(function(_value) {
-          var i = 0, dsc, isValid, allValid = true;
-          while((dsc = validations[i++])) {
-            isValid = dsc.dyn ? dsc.dyn(_scope, { $value: _value }) : [];
             if(dsc.fun) {
               if(!angular.isArray(isValid)) isValid = [isValid];
               isValid.unshift(_value);
               isValid = dsc.fun.apply(null, isValid);
             }
 
-            _ctrl.$setValidity(dsc.as || 'validate', isValid);
-            if(!isValid) allValid = false;
-          }
-          return allValid ? _value : undefined;
+            return isValid;
+          };
         });
       }
     };
@@ -141,9 +133,7 @@ angular.module('platanus.validate', ['platanus.inflector'])
           // revalidate all other group models if valid
           angular.forEach(group, function(_other) {
             if(_ctrl !== _other.model && (_other.always || _other.model.$invalid)) {
-              $timeout(function() {
-                _other.model.$setViewValue(_other.model.$viewValue);
-              }, 0);
+              _other.model.$validate();
             }
           });
         });

@@ -41,7 +41,7 @@ describe('', function() {
         '<form name="form">\
           <input name="test1" ng-model="inputs.test1" validate="is-odd" type="text"/>\
           <input name="test2" ng-model="inputs.test2" validate="is-false, is-true" type="text"/>\
-          <input name="test3" ng-model="inputs.test3" validate="is test1 == $value as is-four" type="text"/>\
+          <input name="test3" ng-model="inputs.test3" validate="is inputs.test1 == $value as is-four" type="text"/>\
           <input name="test4" ng-model="inputs.test4" validate="is-equal-to: \'hello\'" type="text"/>\
         </form>'
       );
@@ -142,7 +142,6 @@ describe('', function() {
       // change test1 value so test2 is revalidated
       scope.form.test1.$setViewValue('3');
       scope.$digest();
-      $timeout.flush();
       expect(scope.form.test2.$valid).toEqual(true);
     }));
 
@@ -150,12 +149,11 @@ describe('', function() {
       // make sure test3 is valid
       scope.form.test3.$setViewValue('2');
       scope.$digest();
-      expect(scope.form.test2.$valid).toEqual(true);
+      expect(scope.form.test3.$valid).toEqual(true);
 
       // change test1 value so test3 is revalidated
       scope.form.test1.$setViewValue('3');
       scope.$digest();
-      $timeout.flush();
       expect(scope.form.test3.$valid).toEqual(false);
     }));
   });

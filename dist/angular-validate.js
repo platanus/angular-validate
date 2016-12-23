@@ -1,6 +1,6 @@
 /**
  * Angular Validation Framework
- * @version v1.0.0 - 2016-12-23
+ * @version v1.0.1 - 2016-12-23
  * @link https://github.com/platanus/angular-validate
  * @author Ignacio Baixas <ignacio@platan.us>
  * @license MIT License, http://www.opensource.org/licenses/MIT

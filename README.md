@@ -3,6 +3,12 @@ Platanus Angular Validations Framework [![Build Status](https://secure.travis-ci
 
 Small set of directives to make angular form validation a breeze.
 
+## Platanus Angular Validations Framework is no longer maintained.
+
+- We will leave the Issues open as a discussion forum only.
+- We do not guarantee a response from us in the Issues.
+- We are no longer accepting pull requests.
+
 ## Installation:
 
 **Optional** Use bower to retrieve package
